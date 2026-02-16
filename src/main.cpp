@@ -1,50 +1,52 @@
-﻿#include <chrono>
+﻿#include <algorithm>
+#include <chrono>
 #include <iostream>
-#include <random>
-#include <cstdint>
 
-struct Point
+#include "MTGenerator.h"
+#include "XorShiftGenerator.h"
+
+
+// constexpr means:
+// This value must be known at compile time.
+// The compiler replaces it directly in the code.
+constexpr std::uint64_t ITERATIONS = 200'000'000ULL; // unsigned long long literal (64-bit integer)
+
+// Generic Benchmark function.
+// It works with ANY class that has Generate().
+template<typename Generator>
+static void Benchmark(const char* name)
 {
-    float x;
-    float y;
-};
+    Generator gen;
+
+    // volatile prevents compiler from deleting our loop.
+    volatile float sink = 0.0f;
+
+    const auto start = std::chrono::high_resolution_clock::now();
+
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
+    {
+        const Point p = gen.Generate();
+        sink += p.x * p.y;
+    }    
+
+    const auto end = std::chrono::high_resolution_clock::now();
+
+    // Compute elapsed time in seconds
+    double elapsedSec = std::chrono::duration<double>(end - start).count();
+
+    // Safety check: prevent division by zero if the loop was extremely fast
+    elapsedSec = std::max(elapsedSec, 1e-9);
+
+    std::cout << name << "\n";
+    std::cout << "Time: " << elapsedSec << " seconds\n";
+    std::cout << "Throughput: " << static_cast<double>(ITERATIONS) / elapsedSec << " points/sec\n";
+    std::cout << "Checksum: " << sink << "\n\n";
+}
 
 int main()
 {
-    using clock = std::chrono::high_resolution_clock;
-
-    constexpr std::uint64_t iterations = 200'000'000ULL;
-
-    // Fast PRNG (Mersenne Twister is good compromise speed/quality)
-    std::mt19937 rng(123456);
-    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
-
-    volatile float sink = 0.0f; // Prevent optimization removal
-
-    auto start = clock::now();
-
-    for (std::uint64_t i = 0; i < iterations; ++i)
-    {
-        Point p;
-        p.x = dist(rng);
-        p.y = dist(rng);
-
-        // Minimal work to avoid full optimization away
-        sink += p.x * p.y;
-    }
-
-    auto end = clock::now();
-
-    std::chrono::duration<double> elapsed = end - start;
-
-    std::cout << "Generated " << iterations << " points\n";
-    std::cout << "Time: " << elapsed.count() << " seconds\n";
-    std::cout << "Throughput: "
-        << static_cast<double>(iterations) / elapsed.count()
-        << " points/sec\n";
-
-    // Prevent compiler from removing sink
-    std::cout << "Checksum: " << sink << "\n";
+    Benchmark<MTGenerator>("Mersenne Twister");
+    Benchmark<XorShiftGenerator>("Xor Shift 32-Bit");
 
     return 0;
 }

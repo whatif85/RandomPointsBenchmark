@@ -4,11 +4,31 @@
     <ClCompile Include="D:\Users\Gabe\Documents\Coding\RandomPointsBenchmark\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Users\Gabe\Documents\Coding\RandomPointsBenchmark\src\MTGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Users\Gabe\Documents\Coding\RandomPointsBenchmark\src\XorShiftGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Users\Gabe\Documents\Coding\RandomPointsBenchmark\src\Point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Users\Gabe\Documents\Coding\RandomPointsBenchmark\src\MTGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Users\Gabe\Documents\Coding\RandomPointsBenchmark\src\XorShiftGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\Users\Gabe\Documents\Coding\RandomPointsBenchmark\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{699ABDCF-A9F5-3911-9647-72424FAB715A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{B3150862-A47A-391C-AD88-7D337D01ED9C}</UniqueIdentifier>
     </Filter>
